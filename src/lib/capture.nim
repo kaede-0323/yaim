@@ -42,13 +42,13 @@ proc captureScreen*(coords: Coord16, windowId: int, output: string, filetype: st
       discard savePNG32(output, buffer, width, height)
     elif stdoutFlag:
       discard savePNG32("/dev/stdout", buffer, width, height)
+      flushFile(stdout)
   of "raw":
     if output.len > 0:
-      let f = open(output, fmWrite)
-      f.write(buffer)
-      f.close()
+      writeFile(output, buffer)
     elif stdoutFlag:
-      stdout.write(buffer)
+      writeFile("/dev/stdout", buffer)
+      
   else:
     quit("Unsupported file type: " & fileType)
 
