@@ -7,4 +7,4 @@ if opts.output.len == 0 and not opts.stdoutFlag:
 
 let selCoords = getCoords()
 
-captureScreen(selCoords, opts.windowId, opts.output, opts.stdoutFlag)
+captureScreen(selCoords, opts.windowId, opts.output, opts.fileType, opts.stdoutFlag)
