@@ -54,9 +54,10 @@ proc getCoords*(windowId: int): Coord16 =
     raise newException(CatchableError, "Yaim: cannot grab pointer")
 
   if XGrabKeyboard(dpy, overlay, 1, GrabModeAsync, GrabModeAsync, CurrentTime) != GrabSuccess:
-    discard XDestroyWindow(dpy, overlay)
-    discard XCloseDisplay(dpy)
-    raise newException(CatchableError, "Yaim: cannot grab keyboard")
+    discard
+#    discard XDestroyWindow(dpy, overlay)
+#    discard XCloseDisplay(dpy)
+#    raise newException(CatchableError, "Yaim: cannot grab keyboard")
 
   var event: XEvent
   var x1, y1, x2, y2: cint
