@@ -24,7 +24,7 @@ proc captureScreen*(coords: Coord16, windowId: int, output: string, filetype: st
   if dpy.isNil:
     quit("Cannot open X display")
 
-  let root = XDefaultRootWindow(dpy)
+  let root = if windowId == -1: XDefaultRootWindow(dpy) else: Window(windowId)
   let width = int(coords[2] - coords[0])
   let height = int(coords[3] - coords[1])
 

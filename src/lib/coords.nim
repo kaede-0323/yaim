@@ -8,14 +8,14 @@ type
 type
   YaimCancel* = object of CatchableError
 
-proc getCoords*(): Coord16 =
+proc getCoords*(windowId: int): Coord16 =
   var coords: Coord16
 
   let dpy = XOpenDisplay(nil)
   if dpy.isNil:
     quit("Cannot open X Display")
 
-  let root = XDefaultRootWindow(dpy)
+  let root = if windowId == -1: XDefaultRootWindow(dpy) else: Window(windowId)
   let screen = XDefaultScreen(dpy)
   let width = XDisplayWidth(dpy, screen)
   let height = XDisplayHeight(dpy, screen)
