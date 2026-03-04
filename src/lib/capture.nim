@@ -1,8 +1,9 @@
-# capture.nim
 import strutils
 import streams
 import nimPNG
-import x11/xlib
+import x11/xlib,
+       x11/x,
+       x11/xutil
 
 import coords
 
@@ -23,7 +24,7 @@ proc captureScreen*(coords: Coord16, windowId: int, output: string, filetype: st
   if dpy.isNil:
     quit("Cannot open X display")
 
-  let root = if windowId == -1: XDefaultRootWindow(dpy) else: TWindow(windowId)
+  let root = XDefaultRootWindow(dpy)
   let width = int(coords[2] - coords[0])
   let height = int(coords[3] - coords[1])
 
@@ -40,9 +41,7 @@ proc captureScreen*(coords: Coord16, windowId: int, output: string, filetype: st
     if output.len > 0:
       discard savePNG32(output, buffer, width, height)
     elif stdoutFlag:
-      let pngObj = encodePNG32(buffer, width, height)
-      let s = StringStream()
-      s.writeData(pngObj.pixels[0].addr, pngObj.pixels.len)
+      discard savePNG32("/dev/stdout", buffer, width, height)
   of "raw":
     if output.len > 0:
       let f = open(output, fmWrite)

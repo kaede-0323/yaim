@@ -1,5 +1,6 @@
 # args.nim
-import os, strutils
+import os
+import strutils
 
 type
   Options* = object
