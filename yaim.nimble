@@ -1,6 +1,6 @@
 # Package
 
-version       = "1.0.2"
+version       = "1.1.0"
 author        = "kaede-0323"
 description   = "yaim (Yet Another make IMage)"
 license       = "MIT"
