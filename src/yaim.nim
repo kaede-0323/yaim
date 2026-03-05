@@ -10,7 +10,7 @@ when isMainModule:
       stderr.writeLine("Usage: --output <filename> xor --stdout")
       quit(2)  # 引数エラー
 
-    let selCoords = getCoords(opts.windowId)
+    let selCoords = getCoords()
 
     captureScreen(
       selCoords,

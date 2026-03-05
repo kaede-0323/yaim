@@ -48,7 +48,7 @@ proc captureScreen*(coords: Coord16, windowId: int, output: string, filetype: st
       writeFile(output, buffer)
     elif stdoutFlag:
       writeFile("/dev/stdout", buffer)
-      
+
   else:
     quit("Unsupported file type: " & fileType)
 
