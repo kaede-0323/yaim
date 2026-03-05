@@ -43,19 +43,6 @@ proc getCoords*(): Coord16 =
 
   discard XMapRaised(dpy, overlay)
 
-  var grabKeyboardErr = XGrabKeyboard(dpy, overlay, 1, GrabModeAsync, GrabModeAsync, CurrentTime)
-  var grabKeyboardAttempt = 0
-  while(grabKeyboardErr != GrabSuccess and grabKeyboardAttempt < 10):
-    sleep(1)
-    grabKeyboardErr = XGrabKeyboard(dpy, overlay, 1, GrabModeAsync, GrabModeAsync, CurrentTime)
-    grabKeyboardAttempt += 1
-
-  if(grabKeyboardErr != GrabSuccess):
-    discard XUngrabKeyboard(dpy,CurrentTime)
-    discard XDestroyWindow(dpy,overlay)
-    discard XCloseDisplay(dpy)
-    raise newException(CatchableError, "Failed to grab Keyboard")
-
   var grabPointerErr = XGrabPointer(dpy, overlay, 1, ButtonPressMask or ButtonReleaseMask or PointerMotionMask, GrabModeAsync, GrabModeAsync, None, None, CurrentTime)
   var grabPointerAttempt = 0
   while(grabPointerErr != GrabSuccess and grabPointerAttempt < 10):
@@ -64,7 +51,6 @@ proc getCoords*(): Coord16 =
     grabPointerAttempt += 1
 
   if(grabPointerErr != GrabSuccess):
-    discard XUngrabKeyboard(dpy,CurrentTime)
     discard XUngrabPointer(dpy,CurrentTime)
     discard XDestroyWindow(dpy,overlay)
     discard XCloseDisplay(dpy)
@@ -102,7 +88,6 @@ proc getCoords*(): Coord16 =
     let escPressed = (keys[escCode.int div 8].uint8 and (1'u8 shr (escCode.int mod 8)))
 
     if escPressed.bool:
-      discard XUngrabKeyboard(dpy,CurrentTime)
       discard XUngrabPointer(dpy,CurrentTime)
       for i in 0..3:
         discard XDestroyWindow(dpy,borders[i])
@@ -120,7 +105,6 @@ proc getCoords*(): Coord16 =
           y1 = ev.xbutton.y
           pressed = true
         elif ev.xbutton.button == Button3:
-          discard XUngrabKeyboard(dpy,CurrentTime)
           discard XUngrabPointer(dpy,CurrentTime)
           for i in 0..3:
             discard XDestroyWindow(dpy,borders[i])
