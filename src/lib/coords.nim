@@ -1,6 +1,7 @@
 import x11/xlib,
        x11/x,
        x11/keysym
+import os
 
 type
   Coord16* = array[4, uint16] # [左上X, 左上Y, 右上X, 右上Y]
@@ -46,18 +47,29 @@ proc getCoords*(windowId: int): Coord16 =
       (CWOverrideRedirect or CWBackPixel).culong, addr borderAttrs
     )
 
-  if XGrabPointer(dpy, overlay, 1,
-      ButtonPressMask or ButtonReleaseMask or PointerMotionMask,
-      GrabModeAsync, GrabModeAsync, 0, 0, CurrentTime) != GrabSuccess:
+  var grabPointerErr = XGrabPointer(dpy, overlay, 1, ButtonPressMask or ButtonReleaseMask or PointerMotionMask, GrabModeAsync, GrabModeAsync, 0, 0, CurrentTime)
+  var grabPointerTries = 0
+  while ( grabPointerErr != GrabSuccess and grabPointerTries < 10):
+    1.sleep
+    grabPointerErr = XGrabPointer(dpy, overlay, 1, ButtonPressMask or ButtonReleaseMask or PointerMotionMask, GrabModeAsync, GrabModeAsync, 0, 0, CurrentTime)
+    inc grabPointerTries
+  
+  if (grabPointerErr != GrabSuccess):
     discard XDestroyWindow(dpy, overlay)
     discard XCloseDisplay(dpy)
-    raise newException(CatchableError, "Yaim: cannot grab pointer")
-
-  if XGrabKeyboard(dpy, overlay, 1, GrabModeAsync, GrabModeAsync, CurrentTime) != GrabSuccess:
-    discard
-#    discard XDestroyWindow(dpy, overlay)
-#    discard XCloseDisplay(dpy)
-#    raise newException(CatchableError, "Yaim: cannot grab keyboard")
+    raise newException(CatchableError, "Yaim: cannot grab Pointer")
+  
+  var grabKeyboardErr = XGrabKeyboard(dpy, overlay, 1, GrabModeAsync, GrabModeAsync, CurrentTime)
+  var grabKeyboardTries = 0
+  while( grabKeyboardErr != GrabSuccess and grabKeyboardTries < 10 ):
+    1.sleep
+    grabKeyboardErr = XGrabKeyboard(dpy, overlay, 1, GrabModeAsync, GrabModeAsync, CurrentTime)
+    inc grabKeyboardTries
+  
+  if( grabKeyboardErr != GrabSuccess):
+    discard XDestroyWindow(dpy, overlay)
+    discard XCloseDisplay(dpy)
+    raise newException(CatchableError, "Yaim: cannot grab Keyboard")
 
   var event: XEvent
   var x1, y1, x2, y2: cint
