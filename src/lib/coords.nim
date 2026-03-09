@@ -122,10 +122,10 @@ proc getCoords*(): Coord16 =
           let w  = max(t, abs(x2-x1))
           let h  = max(t, abs(y2-y1))
   
-          discard XMoveResizeWindow(dpy,borders[0],dx.cint,dy.cint,w.cuint,t.cuint)
-          discard XMoveResizeWindow(dpy,borders[1],dx.cint,(dy+h-t).cint,w.cuint,t.cuint)
-          discard XMoveResizeWindow(dpy,borders[2],dx.cint,dy.cint,t.cuint,h.cuint)
-          discard XMoveResizeWindow(dpy,borders[3],(dx+w-t).cint,dy.cint,t.cuint,h.cuint)
+          discard XMoveResizeWindow(dpy,borders[0],(dx - t).cint,(dy - t).cint,(w + 2*t).cuint,t.cuint)
+          discard XMoveResizeWindow(dpy,borders[1],(dx - t).cint,(dy+h).cint,(w + 2*t).cuint,t.cuint)
+          discard XMoveResizeWindow(dpy,borders[2],(dx - t).cint,(dy - t).cint,t.cuint,(h + 2*t).cuint)
+          discard XMoveResizeWindow(dpy,borders[3],(dx+w).cint,(dy - t).cint,t.cuint,(h + 2*t).cuint)
   
           if not mapped:
             for i in 0..3:
