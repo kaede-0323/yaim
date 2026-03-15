@@ -6,6 +6,7 @@ import x11/xlib,
        x11/xutil
 
 import coords
+import bmp
 
 # img -> buffer コピー
 proc copyXImageToBuffer(img: PXImage, width, height: int, buffer: var seq[byte]) =
@@ -43,11 +44,13 @@ proc captureScreen*(coords: Coord16, windowId: int, output: string, filetype: st
     elif stdoutFlag:
       discard savePNG32("/dev/stdout", buffer, width, height)
       flushFile(stdout)
-  of "raw":
+  of "bmp":
     if output.len > 0:
-      writeFile(output, buffer)
+      if not (saveBMP(output, buffer, width, height)):
+        quit("failed to open: " & output)
     elif stdoutFlag:
-      writeFile("/dev/stdout", buffer)
+      if not (saveBMP("/dev/stdout", buffer, width, height)):
+        quit("fialed to open stdout")
 
   else:
     quit("Unsupported file type: " & fileType)

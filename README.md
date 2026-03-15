@@ -3,7 +3,7 @@ yaim (Yet Another IMage maker) is a utility that takes screenshots of your deskt
 It is designed to overcome shortcomings of maim and performs better in several ways.
 
 ## Features
-- Takes screenshots of your desktop and saves them in PNG format or as raw output. Can also stream to stdout.
+- Takes screenshots of your desktop and saves them in PNG format or Bitmap format. Can also stream to stdout.
 - Supports capturing predetermined regions or windows.
 - Allows interactive selection of a region or window before taking a screenshot.
 
